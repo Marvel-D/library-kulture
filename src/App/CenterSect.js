@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import AddBookBtn from "../comps/AddButton";
+import FormModal from "../comps/modal";
+
 
 const libraryArr = [];
 
@@ -8,9 +10,11 @@ const CenterSect = () => {
         id: 0,
         title: "",
         author: "",
+        pages: 0,
         status: true
     });
     const [library, setLibrary] = useState(libraryArr);
+    const [modal, setModal] = useState(true)
 
     const handleChange = (e) => {
         setBook({
@@ -25,43 +29,31 @@ const CenterSect = () => {
             id: book.id + 1
         })
         e.preventDefault();
+        setModal(false)
         setLibrary(library.concat(book))
         console.log(library);
         console.log(book)
     };
 
+    const handleToggle = () => setModal(!modal)
     return (
         <>
-            <div className="h-96 grid grid-cols-2 justify-center items-center border border-neutral-800">
-                <form onSubmit={handleSubmit}>
-                    <label>
-                        Enter Title:
-                        <input
-                            type="text"
-                            name="title"
-                            value={book.title || ""}
-                            onChange={handleChange}
-                        ></input>
-                    </label>
+            <div className="h-[75vmin] flex flex-col items-center bg-slate-200 border border-neutral-800">
+                <AddBookBtn handleClick={handleToggle} btn1={"Add book"}></AddBookBtn>
+                <br></br>
 
-                    <label>
-                        Enter author:
-                        <input
-                            type="text"
-                            name="author"
-                            value={book.author || ""}
-                            onChange={handleChange}
-                        ></input>
-                    </label>
-                    <input type="submit"></input>
-                    {/* <AddBookBtn btn1={"Add Book"}></AddBookBtn> */}
-                </form>
-                <div>
-                    <ul>
-                        {library.map((book, index) => {
+                <FormModal show={modal} handleSubmit={handleSubmit} handleChange={handleChange} book={book}></FormModal>
+
+                <div className="p-5 border border-neutral-800 w-[100%]">
+                    <ul className="grid grid-cols-4 align-middle gap-4 justify-center">
+                        {library.map((book) => {
                             return (
-                                <li key={book.id}>
-                                    <p>{book.title + ' ' + book.author}</p>
+                                <li key={book.id} className="border border-neutral-800 h-40 flex flex-col justify-evenly items-center">
+                                    <p><b>{book.title}</b></p>
+                                    <p><b>{book.author}</b></p>
+                                    <p><b>{book.pages + " pages"}</b></p>
+                                    <p>{book.status}</p>
+                                    <button><b>Remove</b></button>
                                 </li>
                             )
                         }
